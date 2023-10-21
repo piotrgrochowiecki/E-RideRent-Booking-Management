@@ -1,5 +1,5 @@
 # Booking management service for E-RideRent application
-RESTful web service that for bookings management.
+RESTful web service for bookings management.
 
 ## Used technologies:
 * Java 17
