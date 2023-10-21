@@ -6,8 +6,7 @@ import java.time.LocalDate;
 
 @Builder
 public record Booking(Long id,
-                      String uuid,
-                      LocalDate stratDate,
+                      LocalDate startDate,
                       LocalDate endDate,
                       String userUuid,
                       String carUuid) {

@@ -8,7 +8,7 @@ public class BookingMapper {
 
     public BookingEntity mapToEntity(Booking booking) {
         return BookingEntity.builder()
-                .startDate(booking.stratDate())
+                .startDate(booking.startDate())
                 .endDate(booking.endDate())
                 .userUuid(booking.userUuid())
                 .carUuid(booking.carUuid())
@@ -18,7 +18,7 @@ public class BookingMapper {
     public Booking mapToModel(BookingEntity bookingEntity) {
         return Booking.builder()
                 .id(bookingEntity.getId())
-                .stratDate(bookingEntity.getStartDate())
+                .startDate(bookingEntity.getStartDate())
                 .endDate(bookingEntity.getEndDate())
                 .userUuid(bookingEntity.getUserUuid())
                 .carUuid(bookingEntity.getCarUuid())
