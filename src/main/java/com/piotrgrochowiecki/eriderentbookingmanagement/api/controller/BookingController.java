@@ -21,8 +21,8 @@ public class BookingController {
     private final BookingService bookingService;
     private final BookingApiMapper bookingApiMapper;
 
-    @GetMapping()
-    public BookingResponseDto getById(@RequestParam @NotBlank Long id) {
+    @GetMapping("id/{id}")
+    public BookingResponseDto getById(@PathVariable @NotBlank Long id) {
         Booking booking = bookingService.getById(id);
         return bookingApiMapper.mapToDto(booking);
     }
