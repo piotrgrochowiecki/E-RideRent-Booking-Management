@@ -3,7 +3,6 @@ package com.piotrgrochowiecki.eriderentbookingmanagement.data;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,16 +18,14 @@ public class BookingRepositoryImpl implements BookingRepository {
     private final BookingMapper bookingMapper;
 
     @Override
-    public Booking save(@Nullable Booking booking) {
-        assert booking != null;
+    public Booking save(Booking booking) {
         BookingEntity bookingEntity = bookingMapper.mapToEntity(booking);
         BookingEntity savedBookingEntity = bookingCRUDRepository.save(bookingEntity);
         return bookingMapper.mapToModel(savedBookingEntity);
     }
 
     @Override
-    public Optional<Booking> findById(@Nullable Long id) {
-        assert id != null;
+    public Optional<Booking> findById(Long id) {
         return bookingCRUDRepository.findById(id)
                 .map(bookingMapper::mapToModel);
     }
