@@ -14,12 +14,8 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
 
-    public Booking getById(@Nullable Long id) {
-        assert id != null;
-        if(bookingRepository.findById(id).isEmpty()) {
-            throw new NotFoundRuntimeException(id);
-        }
-        return bookingRepository.findById(id).get();
+    public Booking getById(Long id) {
+        return bookingRepository.findById(id).orElseThrow(() -> new NotFoundRuntimeException(id));
     }
 
     public List<Booking> getAll() {
