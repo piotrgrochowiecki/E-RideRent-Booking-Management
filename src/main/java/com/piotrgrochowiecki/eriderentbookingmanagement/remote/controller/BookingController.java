@@ -1,7 +1,7 @@
-package com.piotrgrochowiecki.eriderentbookingmanagement.api.controller;
+package com.piotrgrochowiecki.eriderentbookingmanagement.remote.controller;
 
-import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.BookingResponseDto;
-import com.piotrgrochowiecki.eriderentbookingmanagement.api.mapper.BookingApiMapper;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingResponseDto;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.mapper.BookingApiMapper;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
 import jakarta.validation.constraints.NotNull;

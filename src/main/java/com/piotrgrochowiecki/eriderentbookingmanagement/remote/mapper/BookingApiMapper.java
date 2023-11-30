@@ -1,7 +1,7 @@
-package com.piotrgrochowiecki.eriderentbookingmanagement.api.mapper;
+package com.piotrgrochowiecki.eriderentbookingmanagement.remote.mapper;
 
-import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.BookingRequestDto;
-import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.BookingResponseDto;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingRequestDto;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingResponseDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import org.springframework.stereotype.Component;
 

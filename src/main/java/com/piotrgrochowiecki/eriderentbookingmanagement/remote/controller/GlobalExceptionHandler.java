@@ -1,6 +1,6 @@
-package com.piotrgrochowiecki.eriderentbookingmanagement.api.controller;
+package com.piotrgrochowiecki.eriderentbookingmanagement.remote.controller;
 
-import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.RuntimeExceptionDto;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.RuntimeExceptionDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.NotFoundRuntimeException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

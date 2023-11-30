@@ -1,4 +1,4 @@
-package com.piotrgrochowiecki.eriderentbookingmanagement.api.dto;
+package com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto;
 
 import lombok.Builder;
 
