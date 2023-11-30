@@ -7,6 +7,7 @@ import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/v1/internal/booking")
+@Validated
 public class BookingController {
 
     private final BookingService bookingService;
