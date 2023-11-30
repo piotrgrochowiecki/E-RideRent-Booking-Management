@@ -2,7 +2,7 @@ package com.piotrgrochowiecki.eriderentbookingmanagement.api.controller;
 
 import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.RuntimeExceptionDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.NotFoundRuntimeException;
-import jakarta.validation.ValidationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ValidationException.class)
-    public RuntimeExceptionDto handleValidationException(ValidationException exception) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public RuntimeExceptionDto handleConstraintValidationException(ConstraintViolationException exception) {
         return RuntimeExceptionDto.builder()
                 .message(exception.getMessage())
                 .timeStamp(LocalDateTime.now())

@@ -4,7 +4,10 @@ import com.piotrgrochowiecki.eriderentbookingmanagement.api.dto.BookingResponseD
 import com.piotrgrochowiecki.eriderentbookingmanagement.api.mapper.BookingApiMapper;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +27,7 @@ public class BookingController {
     private final BookingApiMapper bookingApiMapper;
 
     @GetMapping("id/{id}")
-    public BookingResponseDto getById(@PathVariable @NotBlank Long id) {
+    public BookingResponseDto getById(@PathVariable("id") @NotNull Long id) {
         Booking booking = bookingService.getById(id);
         return bookingApiMapper.mapToDto(booking);
     }
@@ -37,8 +40,8 @@ public class BookingController {
     }
 
     @GetMapping("all-overlapping-with-dates")
-    public List<BookingResponseDto> getAllBookingsOverlappingWithDates(@RequestParam @NotBlank @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                       @RequestParam @NotBlank @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public List<BookingResponseDto> getAllBookingsOverlappingWithDates(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                       @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return bookingService.getAllBookingsOverlappingWithDates(startDate, endDate).stream()
                 .map(bookingApiMapper::mapToDto)
                 .collect(Collectors.toList());
