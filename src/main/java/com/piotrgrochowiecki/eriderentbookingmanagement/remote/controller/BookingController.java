@@ -36,9 +36,9 @@ public class BookingController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("all-overlapping-with-dates")
-    public List<BookingResponseDto> getAllBookingsOverlappingWithDates(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                       @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    @GetMapping("all-overlapping-with-dates/{startDate}/{endDate}")
+    public List<BookingResponseDto> getAllBookingsOverlappingWithDates(@PathVariable("startDate") @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                       @PathVariable("endDate") @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return bookingService.getAllBookingsOverlappingWithDates(startDate, endDate).stream()
                 .map(bookingApiMapper::mapToDto)
                 .collect(Collectors.toList());
