@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -22,10 +25,37 @@ public class BookingService {
     }
     
     public List<Booking> getAllBookingsOverlappingWithDates(LocalDate newBookingStartDate, LocalDate newBookingEndDate) {
-        List<Booking> allBookings = getAll();
-        return allBookings.stream()
+        List<Booking> allBookingsInMonthsBetweenStartAndEndDates = getAllInMonthsAndYearsOfStartAndEndDateAndInBetween(newBookingStartDate, newBookingEndDate);
+        return allBookingsInMonthsBetweenStartAndEndDates.stream()
                 .filter(booking -> isNewBookingOverlappingExistingBookings(newBookingStartDate, newBookingEndDate, booking))
                 .collect(Collectors.toList());
+    }
+
+    private List<Booking> getAllInMonthsAndYearsOfStartAndEndDateAndInBetween(LocalDate startDate, LocalDate endDate) {
+        Set<Integer> yearsCoveringNewBookingDate = IntStream.rangeClosed(startDate.getYear(), endDate.getYear())
+                .boxed()
+                .collect(Collectors.toSet());
+        List<Integer> monthsCoveringNewBookingDate = new ArrayList<>();
+
+        if (startDate.getYear() == endDate.getYear()) {
+            monthsCoveringNewBookingDate.addAll(IntStream.rangeClosed(startDate.getMonthValue(), endDate.getMonthValue())
+                                                        .boxed()
+                                                        .toList());
+        } else {
+            monthsCoveringNewBookingDate.addAll(IntStream.rangeClosed(startDate.getMonthValue(), 12)
+                                                        .boxed()
+                                                        .toList());
+            monthsCoveringNewBookingDate.addAll(IntStream.rangeClosed(1, endDate.getMonthValue())
+                                                        .boxed()
+                                                        .toList());
+        }
+
+        return bookingRepository.findAllInMonthsOfStartAndEndDateAndInBetween(yearsCoveringNewBookingDate,
+                                                                              monthsCoveringNewBookingDate,
+                                                                              startDate.getYear(),
+                                                                              endDate.getYear(),
+                                                                              startDate.getMonthValue(),
+                                                                              endDate.getMonthValue());
     }
     
     private boolean isNewBookingOverlappingExistingBookings(LocalDate newBookingStartDate, LocalDate newBookingEndDate, Booking existingBooking) {
