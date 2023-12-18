@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -33,6 +34,24 @@ public class BookingRepositoryImpl implements BookingRepository {
     @Override
     public List<Booking> findAll() {
         return bookingCRUDRepository.findAll()
+                .stream()
+                .map(bookingMapper::mapToModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Booking> findAllInMonthsOfStartAndEndDateAndInBetween(Set<Integer> yearsCoveringNewBookingDate,
+                                                                      List<Integer> monthsCoveringNewBookingDate,
+                                                                      int startYear,
+                                                                      int endYear,
+                                                                      int startMonth,
+                                                                      int endMonth) {
+        return bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsCoveringNewBookingDate,
+                                                                                monthsCoveringNewBookingDate,
+                                                                                startYear,
+                                                                                endYear,
+                                                                                startMonth,
+                                                                                endMonth)
                 .stream()
                 .map(bookingMapper::mapToModel)
                 .collect(Collectors.toList());
