@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -181,5 +182,63 @@ class BookingControllerTest {
                 .andExpect(content()
                                    .json(bookingResponseDtoListAsJson));
     }
+
+    @Test
+    void shouldReturnOkStatusAndListOfOneBookingResponseDto() throws Exception {
+        //given
+        LocalDate startDate = LocalDate.of(2023, 10, 6);
+        LocalDate endDate = LocalDate.of(2023, 10, 9);
+
+        Booking booking1 = Booking.builder()
+                .id(1L)
+                .startDate(LocalDate.of(2023, 9, 28))
+                .endDate(LocalDate.of(2023, 10, 10))
+                .userUuid("userUuid1")
+                .carUuid("carUuid1")
+                .build();
+
+        BookingResponseDto bookingResponseDto1 = BookingResponseDto.builder()
+                .id(1L)
+                .startDate(LocalDate.of(2023, 9, 28))
+                .endDate(LocalDate.of(2023, 10, 10))
+                .userUuid("userUuid1")
+                .carUuid("carUuid1")
+                .build();
+
+        when(bookingApiMapper.mapToDto(booking1))
+                .thenReturn(bookingResponseDto1);
+
+        List<Booking> bookingList = List.of(booking1);
+
+        List<BookingResponseDto> bookingResponseDtoList = List.of(bookingResponseDto1);
+
+        when(bookingService.getAllBookingsOverlappingWithDates(startDate,
+                                                               endDate))
+                .thenReturn(bookingList);
+
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+        String bookingResponseDtoListAsJson = gson.toJson(bookingResponseDtoList);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+
+
+        //when and then
+        mockMvc.perform(MockMvcRequestBuilders
+                                .get("/api/v1/internal/booking/all-overlapping-with-dates/"
+                                     + startDate.format(formatter)
+                                     + "/"
+                                     + endDate.format(formatter))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status()
+                                   .isOk())
+                .andExpect(content()
+                                   .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content()
+                                   .json(bookingResponseDtoListAsJson));
+    }
+
 
 }
