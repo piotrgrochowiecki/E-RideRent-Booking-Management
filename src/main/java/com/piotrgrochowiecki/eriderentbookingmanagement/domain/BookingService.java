@@ -20,6 +20,10 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
 
+    public Booking add(Booking booking) {
+        return bookingRepository.save(booking);
+    }
+
     public Booking getById(Long id) {
         return bookingRepository.findById(id).orElseThrow(() -> new NotFoundRuntimeException(id));
     }
