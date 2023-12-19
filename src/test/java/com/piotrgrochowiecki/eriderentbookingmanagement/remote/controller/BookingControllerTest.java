@@ -1,10 +1,12 @@
 package com.piotrgrochowiecki.eriderentbookingmanagement.remote.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.NotFoundRuntimeException;
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingRequestDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingResponseDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.remote.mapper.BookingApiMapper;
 import org.junit.jupiter.api.Test;
@@ -67,10 +69,11 @@ class BookingControllerTest {
         when(bookingApiMapper.mapToDto(booking1))
                 .thenReturn(bookingResponseDto);
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-        String bookingResponseDtoAsJson = gson.toJson(bookingResponseDto);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingResponseDtoAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingResponseDto);
 
         //when and then
         mockMvc.perform(MockMvcRequestBuilders
@@ -157,8 +160,6 @@ class BookingControllerTest {
         List<Booking> bookingList = List.of(booking1,
                                             booking2);
         Page<Booking> bookingPage = new PageImpl<>(bookingList);
-//        List<BookingResponseDto> bookingResponseDtos = List.of(bookingResponseDto1,
-//                                                               bookingResponseDto2);
 
         when(bookingApiMapper.mapToDto(booking2))
                 .thenReturn(bookingResponseDto2);
@@ -166,11 +167,11 @@ class BookingControllerTest {
         when(bookingService.getAll(0, 10, "id"))
                 .thenReturn(bookingPage);
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-        String bookingResponseDtoPageAsJson = gson.toJson(bookingPage);
-
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingResponseDtoPageAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingPage);
 
         //when and then
         mockMvc.perform(MockMvcRequestBuilders
@@ -218,10 +219,11 @@ class BookingControllerTest {
                                                                endDate))
                 .thenReturn(bookingList);
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-        String bookingResponseDtoListAsJson = gson.toJson(bookingResponseDtoList);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingResponseDtoListAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingResponseDtoList);
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
 
@@ -242,5 +244,130 @@ class BookingControllerTest {
                                    .json(bookingResponseDtoListAsJson));
     }
 
+    @Test
+    void shouldReturnCreatedStatus() throws Exception {
+        //given
+        LocalDate startDate = LocalDate.of(2036, 10, 6);
+        LocalDate endDate = LocalDate.of(2036, 11, 9);
+
+        BookingRequestDto bookingRequestDto = BookingRequestDto.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking booking = Booking.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking createdBooking = Booking.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        BookingResponseDto bookingResponseDto = BookingResponseDto.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        when(bookingApiMapper.mapToModel(bookingRequestDto))
+                .thenReturn(booking);
+        when(bookingService.add(booking))
+                .thenReturn(createdBooking);
+        when(bookingApiMapper.mapToDto(createdBooking))
+                .thenReturn(bookingResponseDto);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingRequestDtoAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingRequestDto);
+        String bookingResponseDtoAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingResponseDto);
+
+        //when and then
+        mockMvc.perform(MockMvcRequestBuilders
+                                .post("/api/v1/internal/booking/")
+                                .content(bookingRequestDtoAsJson)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status()
+                                   .isCreated())
+                .andExpect(content()
+                                   .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content()
+                                   .json(bookingResponseDtoAsJson));
+    }
+
+    @Test
+    void shouldReturnBadRequestStatus2() throws Exception {
+        //given
+        LocalDate startDate = LocalDate.of(2036, 10, 6);
+        LocalDate endDate = LocalDate.of(2037, 11, 9);
+
+        BookingRequestDto bookingRequestDto = BookingRequestDto.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking booking = Booking.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking createdBooking = Booking.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        BookingResponseDto bookingResponseDto = BookingResponseDto.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        when(bookingApiMapper.mapToModel(bookingRequestDto))
+                .thenReturn(booking);
+        when(bookingService.add(booking))
+                .thenReturn(createdBooking);
+        when(bookingApiMapper.mapToDto(createdBooking))
+                .thenReturn(bookingResponseDto);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingRequestDtoAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingRequestDto);
+
+        //when and then
+        mockMvc.perform(MockMvcRequestBuilders
+                                .post("/api/v1/internal/booking/")
+                                .content(bookingRequestDtoAsJson)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status()
+                                   .isBadRequest())
+                .andExpect(content()
+                                   .contentType(MediaType.APPLICATION_JSON));
+    }
 
 }

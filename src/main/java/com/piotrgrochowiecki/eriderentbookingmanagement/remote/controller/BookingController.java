@@ -1,13 +1,18 @@
 package com.piotrgrochowiecki.eriderentbookingmanagement.remote.controller;
 
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingRequestDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto.BookingResponseDto;
 import com.piotrgrochowiecki.eriderentbookingmanagement.remote.mapper.BookingApiMapper;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +51,17 @@ public class BookingController {
                 .stream()
                 .map(bookingApiMapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<BookingResponseDto> save(@Valid @RequestBody BookingRequestDto bookingRequestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors()
+                    .forEach(fieldError -> System.out.println(fieldError.getField() + ": " + fieldError.getDefaultMessage() + "\n"));
+        }
+        Booking bookingToBeAdded = bookingApiMapper.mapToModel(bookingRequestDto);
+        Booking addedBooking = bookingService.add(bookingToBeAdded);
+        return new ResponseEntity<>(bookingApiMapper.mapToDto(addedBooking), HttpStatus.CREATED);
     }
 
 }
