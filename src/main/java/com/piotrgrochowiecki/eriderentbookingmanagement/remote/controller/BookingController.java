@@ -6,6 +6,7 @@ import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +31,12 @@ public class BookingController {
     }
 
     @GetMapping("all")
-    public List<BookingResponseDto> getAll() {
-        return bookingService.getAll()
-                .stream()
-                .map(bookingApiMapper::mapToDto)
-                .collect(Collectors.toList());
+    public Page<BookingResponseDto> getAll(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                           @RequestParam(defaultValue = "10") Integer pageSize,
+                                           @RequestParam(defaultValue = "id") String propertyToSortBy) {
+
+        return bookingService.getAll(pageNumber, pageSize, propertyToSortBy)
+                .map(bookingApiMapper::mapToDto);
     }
 
     @GetMapping("all-overlapping-with-dates/{startDate}/{endDate}")

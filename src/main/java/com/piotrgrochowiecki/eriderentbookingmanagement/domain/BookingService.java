@@ -1,6 +1,10 @@
 package com.piotrgrochowiecki.eriderentbookingmanagement.domain;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,8 +24,9 @@ public class BookingService {
         return bookingRepository.findById(id).orElseThrow(() -> new NotFoundRuntimeException(id));
     }
 
-    public List<Booking> getAll() {
-        return bookingRepository.findAll();
+    public Page<Booking> getAll(Integer pageNumber, Integer pageSize, String propertyToSortBy) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(propertyToSortBy));
+        return bookingRepository.findAll(paging);
     }
     
     public List<Booking> getAllBookingsOverlappingWithDates(LocalDate newBookingStartDate, LocalDate newBookingEndDate) {
