@@ -13,16 +13,16 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class BookingCRUDRepositoryTest {
+class BookingJpaRepositoryTest {
 
     private final TestEntityManager testEntityManager;
 
-    private final BookingCRUDRepository bookingCRUDRepository;
+    private final BookingJpaRepository bookingJpaRepository;
 
     @Autowired
-    public BookingCRUDRepositoryTest(TestEntityManager testEntityManager, BookingCRUDRepository bookingCRUDRepository) {
+    public BookingJpaRepositoryTest(TestEntityManager testEntityManager, BookingJpaRepository bookingJpaRepository) {
         this.testEntityManager = testEntityManager;
-        this.bookingCRUDRepository = bookingCRUDRepository;
+        this.bookingJpaRepository = bookingJpaRepository;
     }
 
     @Test
@@ -47,7 +47,7 @@ class BookingCRUDRepositoryTest {
         testEntityManager.flush();
 
         //when
-        List<BookingEntity> actual = bookingCRUDRepository.findAll();
+        List<BookingEntity> actual = bookingJpaRepository.findAll();
 
         //then
         assertEquals(2, actual.size());
@@ -74,12 +74,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 11;
         int endMonth = 11;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -106,12 +106,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 10;
         int endMonth = 10;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.isEmpty());
@@ -138,12 +138,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 11;
         int endMonth = 11;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.isEmpty());
@@ -170,12 +170,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 12;
         int endMonth = 12;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -202,12 +202,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 11;
         int endMonth = 11;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -234,12 +234,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 12;
         int endMonth = 12;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -266,12 +266,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 12;
         int endMonth = 1;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -298,12 +298,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 1;
         int endMonth = 2;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -330,12 +330,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 10;
         int endMonth = 12;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -362,12 +362,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 10;
         int endMonth = 2;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));
@@ -400,12 +400,12 @@ class BookingCRUDRepositoryTest {
         int startMonth = 10;
         int endMonth = 2;
 
-        List<BookingEntity> result = bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
-                                                                                                      monthsOfNewBookingDate,
-                                                                                                      startYear,
-                                                                                                      endYear,
-                                                                                                      startMonth,
-                                                                                                      endMonth);
+        List<BookingEntity> result = bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsOfNewBookingDate,
+                                                                                                     monthsOfNewBookingDate,
+                                                                                                     startYear,
+                                                                                                     endYear,
+                                                                                                     startMonth,
+                                                                                                     endMonth);
 
         //then
         assertTrue(result.contains(bookingEntity1));

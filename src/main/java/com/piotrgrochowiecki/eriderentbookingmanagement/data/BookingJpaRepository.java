@@ -1,7 +1,9 @@
 package com.piotrgrochowiecki.eriderentbookingmanagement.data;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface BookingCRUDRepository extends CrudRepository<BookingEntity, Long> {
+public interface BookingJpaRepository extends JpaRepository<BookingEntity, Long> {
 
-    List<BookingEntity> findAll();
+    Page<BookingEntity> findAll(Pageable pageable);
 
     @Query("SELECT b FROM BookingEntity b WHERE " +
            "((FUNCTION('YEAR', b.startDate) IN :years AND FUNCTION('MONTH', b.startDate) IN :months) OR " +

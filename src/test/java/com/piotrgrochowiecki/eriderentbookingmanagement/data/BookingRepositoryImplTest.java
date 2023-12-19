@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +25,7 @@ class BookingRepositoryImplTest {
     }
 
     @MockBean
-    private BookingCRUDRepository bookingCRUDRepository;
+    private BookingJpaRepository bookingJpaRepository;
 
     @MockBean
     private BookingMapper bookingMapper;
@@ -51,7 +52,7 @@ class BookingRepositoryImplTest {
 
         when(bookingMapper.mapToEntity(booking))
                 .thenReturn(bookingEntity);
-        when(bookingCRUDRepository.save(bookingEntity))
+        when(bookingJpaRepository.save(bookingEntity))
                 .thenReturn(bookingEntity);
         when(bookingMapper.mapToModel(bookingEntity))
                 .thenReturn(booking);
@@ -90,7 +91,7 @@ class BookingRepositoryImplTest {
                 .userUuid("userUuid")
                 .build();
 
-        when(bookingCRUDRepository.findById(id))
+        when(bookingJpaRepository.findById(id))
                 .thenReturn(Optional.of(bookingEntity));
         when(bookingMapper.mapToModel(bookingEntity))
                 .thenReturn(booking);
@@ -121,12 +122,6 @@ class BookingRepositoryImplTest {
                 .userUuid("userUuid2")
                 .build();
 
-        List<BookingEntity> bookingEntityList = List.of(bookingEntity1,
-                                                        bookingEntity2);
-
-        when(bookingCRUDRepository.findAll())
-                .thenReturn(bookingEntityList);
-
         Booking booking1 = Booking.builder()
                 .id(1L)
                 .startDate(LocalDate.of(2023, 10, 4))
@@ -147,9 +142,18 @@ class BookingRepositoryImplTest {
                 .thenReturn(booking1);
         when(bookingMapper.mapToModel(bookingEntity2))
                 .thenReturn(booking2);
+        List<BookingEntity> bookingEntityList = List.of(bookingEntity1,
+                                                        bookingEntity2);
+
+        Pageable paging = PageRequest.of(0, 10, Sort.by("id"));
+        Page<BookingEntity> bookingEntityPage = new PageImpl<>(bookingEntityList);
+        when(bookingJpaRepository.findAll(paging))
+                .thenReturn(bookingEntityPage);
+
 
         //when
-        List<Booking> resultList = bookingRepository.findAll();
+        Page<Booking> resultPage = bookingRepository.findAll(paging);
+        List<Booking> resultList = resultPage.stream().toList();
 
         //then
         assertTrue(resultList.contains(booking1));

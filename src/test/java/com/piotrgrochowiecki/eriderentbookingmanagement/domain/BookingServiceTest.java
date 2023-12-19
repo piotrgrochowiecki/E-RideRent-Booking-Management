@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -86,12 +87,16 @@ class BookingServiceTest {
 
         List<Booking> bookingList = List.of(booking1,
                                             booking2);
+        Page<Booking> bookingPage = new PageImpl<>(bookingList);
+        Pageable paging = PageRequest.of(1, 10, Sort.by("id"));
 
-        when(bookingRepository.findAll())
-                .thenReturn(bookingList);
+        when(bookingRepository.findAll(paging))
+                .thenReturn(bookingPage);
 
         //when
-        List<Booking> result = bookingService.getAll();
+        Page<Booking> resultPage = bookingService.getAll(1, 10, "id");
+        List<Booking> result = resultPage.stream()
+                .toList();
 
         //then
         assertTrue(result.contains(booking1));

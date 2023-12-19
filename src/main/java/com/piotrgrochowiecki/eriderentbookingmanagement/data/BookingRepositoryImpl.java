@@ -3,6 +3,8 @@ package com.piotrgrochowiecki.eriderentbookingmanagement.data;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.Booking;
 import com.piotrgrochowiecki.eriderentbookingmanagement.domain.BookingRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,28 +17,26 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BookingRepositoryImpl implements BookingRepository {
 
-    private final BookingCRUDRepository bookingCRUDRepository;
+    private final BookingJpaRepository bookingJpaRepository;
     private final BookingMapper bookingMapper;
 
     @Override
     public Booking save(Booking booking) {
         BookingEntity bookingEntity = bookingMapper.mapToEntity(booking);
-        BookingEntity savedBookingEntity = bookingCRUDRepository.save(bookingEntity);
+        BookingEntity savedBookingEntity = bookingJpaRepository.save(bookingEntity);
         return bookingMapper.mapToModel(savedBookingEntity);
     }
 
     @Override
     public Optional<Booking> findById(Long id) {
-        return bookingCRUDRepository.findById(id)
+        return bookingJpaRepository.findById(id)
                 .map(bookingMapper::mapToModel);
     }
 
     @Override
-    public List<Booking> findAll() {
-        return bookingCRUDRepository.findAll()
-                .stream()
-                .map(bookingMapper::mapToModel)
-                .collect(Collectors.toList());
+    public Page<Booking> findAll(Pageable paging) {
+        return bookingJpaRepository.findAll(paging)
+                .map(bookingMapper::mapToModel);
     }
 
     @Override
@@ -46,12 +46,12 @@ public class BookingRepositoryImpl implements BookingRepository {
                                                                       int endYear,
                                                                       int startMonth,
                                                                       int endMonth) {
-        return bookingCRUDRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsCoveringNewBookingDate,
-                                                                                monthsCoveringNewBookingDate,
-                                                                                startYear,
-                                                                                endYear,
-                                                                                startMonth,
-                                                                                endMonth)
+        return bookingJpaRepository.findAllBookingEntitiesWithinMonthsAndYears(yearsCoveringNewBookingDate,
+                                                                               monthsCoveringNewBookingDate,
+                                                                               startYear,
+                                                                               endYear,
+                                                                               startMonth,
+                                                                               endMonth)
                 .stream()
                 .map(bookingMapper::mapToModel)
                 .collect(Collectors.toList());

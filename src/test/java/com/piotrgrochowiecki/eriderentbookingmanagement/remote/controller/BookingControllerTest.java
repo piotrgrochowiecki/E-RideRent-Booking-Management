@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -154,20 +156,20 @@ class BookingControllerTest {
 
         List<Booking> bookingList = List.of(booking1,
                                             booking2);
-
-        List<BookingResponseDto> bookingResponseDtos = List.of(bookingResponseDto1,
-                                                               bookingResponseDto2);
+        Page<Booking> bookingPage = new PageImpl<>(bookingList);
+//        List<BookingResponseDto> bookingResponseDtos = List.of(bookingResponseDto1,
+//                                                               bookingResponseDto2);
 
         when(bookingApiMapper.mapToDto(booking2))
                 .thenReturn(bookingResponseDto2);
 
-        when(bookingService.getAll())
-                .thenReturn(bookingList);
+        when(bookingService.getAll(0, 10, "id"))
+                .thenReturn(bookingPage);
 
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
-        String bookingResponseDtoListAsJson = gson.toJson(bookingResponseDtos);
+        String bookingResponseDtoPageAsJson = gson.toJson(bookingPage);
 
 
         //when and then
@@ -180,7 +182,7 @@ class BookingControllerTest {
                 .andExpect(content()
                                    .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content()
-                                   .json(bookingResponseDtoListAsJson));
+                                   .json(bookingResponseDtoPageAsJson));
     }
 
     @Test
