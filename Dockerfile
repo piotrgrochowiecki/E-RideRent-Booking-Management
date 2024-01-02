@@ -2,4 +2,4 @@ FROM openjdk:17-jdk-alpine@sha256:a996cdcc040704ec6badaf5fecf1e144c096e00231a291
 RUN apk update && apk upgrade && apk add bash
 WORKDIR /home/ERideRent_Booking_Management
 ADD target/E-RideRent-Booking-Management.jar /home/ERideRent_Booking_Management/
-CMD java -jar /home/ERideRent_Booking_Management/E-RideRent-Booking-Management.jar --spring.datasource.url=jdbc:mysql://BookingManagementServiceDB:3313/booking_management_service_db
+CMD java -jar /home/ERideRent_Booking_Management/E-RideRent-Booking-Management.jar
