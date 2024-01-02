@@ -1,5 +1,6 @@
 package com.piotrgrochowiecki.eriderentbookingmanagement.remote.dto;
 
+import com.piotrgrochowiecki.eriderentbookingmanagement.remote.validation.EndDateAfterStartDateConstraint;
 import com.piotrgrochowiecki.eriderentbookingmanagement.remote.validation.SixMonthsDurationConstraint;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Builder
 @SixMonthsDurationConstraint
+@EndDateAfterStartDateConstraint
 public record BookingRequestDto(@NotNull @Future @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                 @NotNull @Future @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                                 @NotEmpty String userUuid,
