@@ -1,0 +1,31 @@
+version: "3.8"
+
+networks:
+  e-riderent-network:
+    driver: bridge
+
+services:
+  booking-management-service-containerized-db:
+    image: ${DB_IMAGE_NAME}:${DB_IMAGE_TAG}
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=${MYSQL_ALLOW_EMPTY_PASSWORD_VALUE}
+      - MYSQL_DATABASE=${MYSQL_DATABASE_NAME}
+    networks:
+      - e-riderent-network
+    restart: unless-stopped
+
+  booking-management-service-containerized-app:
+    depends_on:
+      - booking-management-service-containerized-db
+    build:
+      dockerfile: Dockerfile
+    image: piotrgrochowiecki1995/e-riderent-booking-management:0.1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_CONTAINER_NAME}:3306/${MYSQL_DATABASE_NAME}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+    ports:
+      - "${SPRING_APP_LOCALHOST_PORT}:${SPRING_APP_PORT}"
+    networks:
+      - e-riderent-network
+    restart: on-failure
