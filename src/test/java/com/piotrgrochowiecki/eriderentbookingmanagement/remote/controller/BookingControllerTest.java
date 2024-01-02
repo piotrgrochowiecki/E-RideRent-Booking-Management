@@ -370,4 +370,66 @@ class BookingControllerTest {
                                    .contentType(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    void shouldReturnBadRequestStatus3() throws Exception {
+        //given
+        LocalDate startDate = LocalDate.of(2036, 10, 6);
+        LocalDate endDate = LocalDate.of(2036, 9, 9);
+
+        BookingRequestDto bookingRequestDto = BookingRequestDto.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking booking = Booking.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        Booking createdBooking = Booking.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        BookingResponseDto bookingResponseDto = BookingResponseDto.builder()
+                .id(1L)
+                .startDate(startDate)
+                .endDate(endDate)
+                .carUuid("carUuid")
+                .userUuid("userUuid")
+                .build();
+
+        when(bookingApiMapper.mapToModel(bookingRequestDto))
+                .thenReturn(booking);
+        when(bookingService.add(booking))
+                .thenReturn(createdBooking);
+        when(bookingApiMapper.mapToDto(createdBooking))
+                .thenReturn(bookingResponseDto);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String bookingRequestDtoAsJson = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bookingRequestDto);
+
+        //when and then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/internal/booking/")
+                        .content(bookingRequestDtoAsJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status()
+                        .isBadRequest())
+                .andExpect(content()
+                        .contentType(MediaType.APPLICATION_JSON));
+    }
+
+
 }
